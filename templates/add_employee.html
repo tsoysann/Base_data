@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Supplier</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container" style="text-align: center; font-size: 24px;">
+        <h1 class="my-4">Add New Employee</h1>
+
+        <!-- Form to Add Employee -->
+        <h2>Add Employee</h2>
+        <form method="POST" action="{{ url_for('add_employee') }}">
+            {{ employee_form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ employee_form.employee_name.label }}
+                {{ employee_form.employee_name(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ employee_form.position.label }}
+                {{ employee_form.position(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ employee_form.salary.label }}
+                {{ employee_form.salary(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ employee_form.contract_date.label }}
+                {{ employee_form.contract_date(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ employee_form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+    </div>
+</body>
+</html>

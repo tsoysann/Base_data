@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Supplier</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container" style="text-align: center; font-size: 24px;">
+        <h1 class="my-4">Add New Bouquet</h1>
+
+        <!-- Form to Add Bouquet -->
+        <h2>Add Bouquet</h2>
+        <form method="POST" action="{{ url_for('add_bouquet') }}">
+            {{ bouquet_form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ bouquet_form.name.label }}
+                {{ bouquet_form.name(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ bouquet_form.price.label }}
+                {{ bouquet_form.price(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ bouquet_form.description.label }}
+                {{ bouquet_form.description(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ bouquet_form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+    </div>
+</body>
+</html>
