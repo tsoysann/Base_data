@@ -1,0 +1,12 @@
+<!-- admin_action.html -->
+{% block content %}
+  <div class="container">
+    <h2>Добро пожаловать, {{ current_user.username }}!</h2>
+    <h4>Выберите действие:</h4>
+    <ul>
+      <li><a href="{{ url_for('admin_dashboard') }}">Перейти к таблицам</a></li>
+      <li><a href="{{ url_for('logout') }}">Выйти</a></li>
+      <!-- Добавьте другие действия по необходимости -->
+    </ul>
+  </div>
+{% endblock %}

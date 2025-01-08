@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders By Status Report</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Orders By Status Report</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+         <h1 class="my-4">Список заказов по статусам</h1>
+          <form method="GET" class="mb-3">
+             <div class="form-group">
+                <label>Фильтр по статусу:</label>
+                 <div class="form-check">
+                     <input class="form-check-input" type="radio" name="order_status" id="active" value="active"
+                            {% if order_status == "active" %} checked {% endif %}>
+                    <label class="form-check-label" for="active">
+                        Активные
+                    </label>
+                  </div>
+                 <div class="form-check">
+                     <input class="form-check-input" type="radio" name="order_status" id="completed" value="completed" {% if order_status == 'completed' %} checked {% endif %}>
+                    <label class="form-check-label" for="completed">
+                        Завершенные
+                   </label>
+                 </div>
+                   <div class="form-check">
+                     <input class="form-check-input" type="radio" name="order_status" id="all" value="all" {% if order_status == 'all' or not order_status %} checked {% endif %}>
+                    <label class="form-check-label" for="all">
+                        Все
+                    </label>
+                  </div>
+              </div>
+            <button type="submit" class="btn btn-primary">Показать</button>
+         </form>
+
+          {% if orders_by_status %}
+               {% if order_status == 'active' %}
+                 <h2>Активные заказы</h2>
+                    <table class="table table-bordered">
+                       <thead>
+                           <tr>
+                               <th>ID</th>
+                              <th>Дата заказа</th>
+                              <th>ID сотрудника</th>
+                                <th>Статус заказа</th>
+                            </tr>
+                       </thead>
+                        <tbody>
+                         {% for order in orders_by_status.active %}
+                              <tr>
+                                  <td>{{ order.order_id_res }}</td>
+                                   <td>{{ order.order_date_res }}</td>
+                                   <td>{{ order.employee_id_res }}</td>
+                                   <td>{{ order.order_status_res }}</td>
+                               </tr>
+                           {% endfor %}
+                      </tbody>
+                   </table>
+               {% endif %}
+               {% if order_status == 'completed' %}
+                  <h2>Завершенные заказы</h2>
+                    <table class="table table-bordered">
+                        <thead>
+                           <tr>
+                                <th>ID</th>
+                                 <th>Дата заказа</th>
+                                 <th>ID сотрудника</th>
+                                  <th>Статус заказа</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             {% for order in orders_by_status.completed %}
+                              <tr>
+                                  <td>{{ order.order_id_res }}</td>
+                                   <td>{{ order.order_date_res }}</td>
+                                    <td>{{ order.employee_id_res }}</td>
+                                    <td>{{ order.order_status_res }}</td>
+                              </tr>
+                            {% endfor %}
+                         </tbody>
+                     </table>
+               {% endif %}
+               {% if order_status == 'all' or not order_status %}
+                  <table class="table table-bordered">
+                    <thead>
+                       <tr>
+                            <th>ID</th>
+                            <th>Дата заказа</th>
+                             <th>ID сотрудника</th>
+                              <th>Статус заказа</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                        {% for order in orders_by_status %}
+                           <tr>
+                             <td>{{ order.order_id_res }}</td>
+                             <td>{{ order.order_date_res }}</td>
+                              <td>{{ order.employee_id_res }}</td>
+                            <td>{{ order.order_status_res }}</td>
+                            </tr>
+                       {% endfor %}
+                     </tbody>
+                 </table>
+              {% endif %}
+           {% else %}
+              <p>Нет заказов.</p>
+           {% endif %}
+        <br>
+         <a href="{{ url_for('user_dashboard') }}">Назад</a>
+    </div>
+   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
