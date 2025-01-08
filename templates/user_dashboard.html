@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .details {
+            display: none;
+            margin-left: 20px;
+        }
+        .toggle-details {
+            cursor: pointer;
+            text-decoration: underline;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">User Dashboard</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="my-4">Добро пожаловать!</h1>
+
+        {% if user %}
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Информация о пользователе</h2>
+                <a href="{{ url_for('user_orders_by_status') }}" class="btn btn-primary ml-2">Заказы по статусу</a>
+                <a href="{{ url_for('user_most_popular_products') }}" class="btn btn-primary ml-2">Рейтинг ваших товаров</a>
+                <a href="{{ url_for('user_products_in_orders') }}" class="btn btn-primary ml-2">Продукты в заказах</a>
+                <a href="{{ url_for('user_deliveries_with_suppliers') }}" class="btn btn-primary ml-2">Список доставок</a>
+            </div>
+            <p><strong>ФИО:</strong> {{ user.full_name }}</p>
+            <p><strong>Возраст:</strong> {{ user.age }}</p>
+            <p><strong>Телефон:</strong> {{ user.phone_number }}</p>
+            <p><strong>Дата первого заказа:</strong> {{ user.first_order_date }}</p>
+            <a href="{{ url_for('update_profile') }}" class="btn btn-primary">Редактировать профиль</a>
+
+            <h2 class="mt-4">Ваши заказы</h2>
+
+            <!-- Форма для фильтрации -->
+            <form method="GET" action="{{ url_for('user_dashboard') }}" class="mb-3">
+                <div class="form-row">
+                    <div class="col">
+                        <label for="start_date">Дата начала</label>
+                        <input type="date" id="start_date" name="start_date" class="form-control" value="{{ start_date }}">
+                    </div>
+                    <div class="col">
+                        <label for="end_date">Дата окончания</label>
+                        <input type="date" id="end_date" name="end_date" class="form-control" value="{{ end_date }}">
+                    </div>
+                </div>
+                <div class="form-row mt-3">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">Фильтровать</button>
+                        <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">Сбросить фильтр</a>
+                    </div>
+                </div>
+            </form>
+
+            {% if orders %}
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Дата заказа</th>
+                            <th>Имя сотрудника</th>
+                            <th>Статус заказа</th>
+                            <th>Действия</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for entry in orders %}
+                            <tr>
+                                <td>{{ entry.order.order_id_res }}</td>
+                                <td>{{ entry.order.order_date_res }}</td>
+                                <td>{{ entry.order.employee_name_res }}</td>
+                                <td>{{ entry.order.order_status_res }}</td>
+                                <td>
+                                    <a class="toggle-details" data-target="order-{{ entry.order.order_id_res }}">Детали</a>
+                                </td>
+                            </tr>
+                            <tr class="details" id="order-{{ entry.order.order_id_res }}">
+                                <td colspan="5">
+                                    <h5>Детали заказа</h5>
+                                    {% if entry.details %}
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Наименование продукта</th>
+                                                    <th>Количество</th>
+                                                    <th>Цена</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for detail in entry.details %}
+                                                    <tr>
+                                                        <td>{{ detail.order_detail_id }}</td>
+                                                        <td>{{ detail.product.product_name }}</td>
+                                                        <td>{{ detail.quantity }}</td>
+                                                        <td>{{ detail.purchase_price }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <p>Нет деталей заказа.</p>
+                                    {% endif %}
+
+                                    <h5 class="mt-3">Оплата</h5>
+                                    {% if entry.payments %}
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Дата оплаты</th>
+                                                    <th>Сумма</th>
+                                                    <th>Метод</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for payment in entry.payments %}
+                                                    <tr>
+                                                        <td>{{ payment.payment_id }}</td>
+                                                        <td>{{ payment.payment_date }}</td>
+                                                        <td>{{ payment.amount }}</td>
+                                                        <td>{{ payment.payment_method }}</td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    {% else %}
+                                        <p>Нет информации об оплате.</p>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>Заказов нет.</p>
+            {% endif %}
+        <a href="{{ url_for('user_create_order') }}" class="btn btn-primary my-3">Создать заказ</a>
+        {% else %}
+            <p>Пользователь не найден.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        document.querySelectorAll('.toggle-details').forEach(toggler => {
+            toggler.addEventListener('click', function (event) {
+                event.preventDefault();
+                const targetId = this.getAttribute('data-target');
+                const target = document.getElementById(targetId);
+                target.style.display = (target.style.display === 'none' || !target.style.display) ? 'table-row' : 'none';
+            });
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

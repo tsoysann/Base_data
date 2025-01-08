@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products In Orders Report</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Products In Orders Report</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+         <h1 class="my-4">Список продуктов в заказах</h1>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <form method="GET" class="form-inline">
+                <div class="form-group mr-2">
+                    <label for="min_price">Мин. цена:</label>
+                    <input type="number" name="min_price" id="min_price" class="form-control ml-1" value="{{ min_price or '' }}">
+                </div>
+                <div class="form-group mr-2">
+                    <label for="max_price">Макс. цена:</label>
+                    <input type="number" name="max_price" id="max_price" class="form-control ml-1" value="{{ max_price or '' }}">
+                </div>
+                <button type="submit" class="btn btn-primary mr-2">Фильтр</button>
+            </form>
+            <form method="GET" class="d-inline-block">
+                <input type="hidden" name="reset_filter" value="true">
+                <button type="submit" class="btn btn-secondary">Сбросить фильтр</button>
+            </form>
+        </div>
+
+
+
+            {% if order_details %}
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                          <th>Название продукта</th>
+                            <th>Количество</th>
+                             <th>Цена</th>
+                        </tr>
+                    </thead>
+                   <tbody>
+                        {% for detail in order_details %}
+                          <tr>
+                             <td>{{ detail.product_name }}</td>
+                              <td>{{ detail.quantity }}</td>
+                              <td>{{ detail.purchase_price }}</td>
+                            </tr>
+                         {% endfor %}
+                           <tr>
+                                <td colspan="2">Общая стоимость</td>
+                               <td>{{ total_spent }}</td>
+                            </tr>
+                    </tbody>
+                </table>
+                {% else %}
+                <p>Заказов с продуктами не найдено</p>
+              {% endif %}
+           <br>
+             <a href="{{ url_for('user_dashboard') }}">Назад</a>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
